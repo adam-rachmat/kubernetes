@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard-ingress
+  namespace: kube-system
+  annotations:
+    cert-manager.io/cluster-issuer: lets-encrypt
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - dashboard.kube.modalsemangat.com
+    secretName: dashboard-ingress-tls
+  rules:
+  - host: dashboard.kube.modalsemangat.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: kubernetes-dashboard
+            port:
+              number: 8443
+        path: /
+        pathType: Prefix
