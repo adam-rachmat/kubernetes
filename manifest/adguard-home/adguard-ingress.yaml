@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: adguard-ingress
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: lets-encrypt
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: public
+  tls:
+  - hosts:
+    - adguard.kube.modalsemangat.com
+    secretName: adguard-ingress-tls
+  rules:
+  - host: adguard.kube.modalsemangat.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: adguard-home
+            port:
+              number: 3000
+        path: /
+        pathType: Prefix
